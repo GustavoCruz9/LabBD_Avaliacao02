@@ -1,0 +1,13 @@
+package guilherme.gustavo.TrabalhoBd;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class TrabalhoBdApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
