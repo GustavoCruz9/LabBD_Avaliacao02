@@ -37,7 +37,6 @@ public class VisualizarMatriculaSecretariaController {
 		String saida = "";
 		String erro = "";
 
-//		List<Matricula> disciplinas = new ArrayList<>();
 		List<Matricula> matriculas = new ArrayList<>();
 
 		Aluno a = new Aluno();
@@ -67,37 +66,28 @@ public class VisualizarMatriculaSecretariaController {
 					if (verificaRa(a) == 1) {
 						matriculas = listarMatriculas(a);
 						if (matriculas.isEmpty()) {
-							erro = "O aluno do Ra " + pesquisaRa + " não possui matriculas";
+							erro = "O aluno do Ra " + pesquisaRa + " nao possui matriculas";
 						}
 					} else {
-						erro = "RA inválido";
+						erro = "RA invalido";
 					}
 				} else {
 					erro = "Tamanho de RA incorreto";
 				}
 
-			} // else {
-//				saida = cadastrarMatricula(m);
-//				disciplinas = listarDisciplinas(a);
-//			}
+			}
 
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
 
-//			try {
-//				disciplinas = listarDisciplinas(a);
-//			} catch (SQLException | ClassNotFoundException e1) {
-//				erro = e1.getMessage();
-//			}
-
 		} finally {
 			model.addAttribute("saida", saida);
 			model.addAttribute("erro", erro);
-//			model.addAttribute("disciplinas", disciplinas);
 			model.addAttribute("matriculas", matriculas);
 		}
-			return new ModelAndView("visualizarMatriculaSecretaria");
-		
+
+		return new ModelAndView("visualizarMatriculaSecretaria");
+
 	}
 
 	private int verificaRa(Aluno a) throws SQLException, ClassNotFoundException {

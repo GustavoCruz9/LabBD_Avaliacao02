@@ -1,20 +1,13 @@
 var urlsAluno = {
-    "cadastrar": "menuSecretaria.jsp",
-    "alterar": "menuSecretaria.jsp",
-    "vizualizar": "vizualizarAlunos.jsp",
-    "telefone" : "cadastrarTelefone.jsp"
-};
-
-// Objeto para mapear opções selecionadas para URLs de selectDisciplina
-var urlsDisciplina = {
-    "cadastrar": "cadastrarDisciplina.jsp",
-    "alterar": "cadastrarDisciplina.jsp",
-    "vizualizar": "index.jsp"
+    "cadastrar": "alunoCadastrar",
+    "alterar": "alunoCadastrar",
+    "vizualizar": "alunoListar",
+    "telefone" : "telefone"
 };
 
 var urlsMatricula = {
-    "cadastrar": "cadastrarMatricula.jsp",
-    "vizualizar": "vizualizarMatricula.jsp"
+    "cadastrar": "matriculaSecretaria",
+    "vizualizar": "visualizarMatriculaSecretaria"
 }
 
 // Função para redirecionar com base no valor selecionado
@@ -31,12 +24,6 @@ function redirecionar(selectedValue, urls) {
 document.getElementById("selectAluno").addEventListener("change", function () {
     var selectedValue = this.value;
     redirecionar(selectedValue, urlsAluno);
-});
-
-// Manipulador de eventos para selectDisciplina
-document.getElementById("selectDisciplina").addEventListener("change", function () {
-    var selectedValue = this.value;
-    redirecionar(selectedValue, urlsDisciplina);
 });
 
 document.getElementById("selectMatricula").addEventListener("change", function () {

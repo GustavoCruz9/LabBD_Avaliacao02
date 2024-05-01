@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,8 +19,8 @@
 			<label for="">Entrar como:</label>
 		</div>
 
-		<a href="menuSecretaria" class="funcional">Secretaria Academica</a>
-		<a href="menuAluno" class="funcional">Aluno</a>
+		<a href="alunoCadastrar" class="funcional">Secretaria Academica</a>
+		<a href="matriculaAluno" class="funcional">Aluno</a>
 		<a href="" class="botao">Professor</a>
 
 	</div>

@@ -62,7 +62,7 @@ public class AlunoCadastrarController {
 					|| instituicaoConclusao2Grau.trim().isEmpty() || pontuacaoVestibular.trim().isEmpty()
 					|| posicaoVestibular.trim().isEmpty()) {
 
-				erro = "Por favor, preencha todos os campos obrigatórios.";
+				erro = "Por favor, preencha todos os campos obrigatorios.";
 			}
 		}
 		
@@ -136,7 +136,7 @@ public class AlunoCadastrarController {
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
 			if (erro.contains("verificaDataConclusao")) {
-				erro = "A data de conclusão deve ser maior que a data de nascimento";
+				erro = "A data de conclusao deve ser maior que a data de nascimento";
 			}
 		} finally {
 			model.addAttribute("saida", saida);

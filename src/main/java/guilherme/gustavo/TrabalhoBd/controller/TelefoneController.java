@@ -90,7 +90,7 @@ public class TelefoneController {
 			if (cmd.contains("Listar")) {
 				alunos = listarTelefones();
 				if (alunos.isEmpty()) {
-					erro = "Não existe nenhum telefone cadastrado";
+					erro = "Nao existe nenhum telefone cadastrado";
 				}
 			}
 		} catch (SQLException | ClassNotFoundException e) {
