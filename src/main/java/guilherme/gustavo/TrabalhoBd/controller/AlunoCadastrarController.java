@@ -25,12 +25,12 @@ public class AlunoCadastrarController {
 	@Autowired
 	private AlunoDao aDao;
 	
-	@RequestMapping(name = "alunoCadastrar", value = "/alunoCadastrar", method = RequestMethod.GET)
+	@RequestMapping(name = "menuSecretaria", value = "/menuSecretaria", method = RequestMethod.GET)
 	public ModelAndView alunoCadastrarGet(ModelMap model) {
-		return new ModelAndView("alunoCadastrar");
+		return new ModelAndView("menuSecretaria");
 	}
 	
-	@RequestMapping(name = "alunoCadastrar", value = "/alunoCadastrar", method = RequestMethod.POST)
+	@RequestMapping(name = "menuSecretaria", value = "/menuSecretaria", method = RequestMethod.POST)
 	public ModelAndView alunoCadastrarPost(@RequestParam Map<String, String> param, ModelMap model ) {
 		String cmd = param.get("botao");
 		String codCurso = param.get("codCurso");
@@ -62,7 +62,7 @@ public class AlunoCadastrarController {
 					|| instituicaoConclusao2Grau.trim().isEmpty() || pontuacaoVestibular.trim().isEmpty()
 					|| posicaoVestibular.trim().isEmpty()) {
 
-				erro = "Por favor, preencha todos os campos obrigatorios.";
+				erro = "Por favor, preencha todos os campos obrigatórios.";
 			}
 		}
 		
@@ -136,7 +136,7 @@ public class AlunoCadastrarController {
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
 			if (erro.contains("verificaDataConclusao")) {
-				erro = "A data de conclusao deve ser maior que a data de nascimento";
+				erro = "A data de conclusão deve ser maior que a data de nascimento";
 			}
 		} finally {
 			model.addAttribute("saida", saida);
@@ -146,7 +146,7 @@ public class AlunoCadastrarController {
 
 		}
 
-		return new ModelAndView("alunoCadastrar");
+		return new ModelAndView("menuSecretaria");
 	}
 	
 	private String cadastrarAluno(Aluno a) throws SQLException, ClassNotFoundException {

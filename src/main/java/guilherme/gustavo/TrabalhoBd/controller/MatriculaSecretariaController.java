@@ -24,47 +24,56 @@ public class MatriculaSecretariaController {
 
 	@Autowired
 	private MatriculaDao mDao;
-
+	
 	@RequestMapping(name = "matriculaSecretaria", value = "/matriculaSecretaria", method = RequestMethod.GET)
 	public ModelAndView matriculaSecretariaGet(@RequestParam Map<String, String> param, ModelMap model) {
-
+		String cmd = param.get("botao");
 		String pesquisaRa = param.get("pesquisaRa");
+		Aluno a = new Aluno();
+
+		a.setRa(pesquisaRa);
+		List<Matricula> disciplinas = new ArrayList<>();
+
+		a.setRa(pesquisaRa);
+
 		String saida = "";
 		String erro = "";
 
-		Aluno a = new Aluno();
-		List<Matricula> disciplinas = new ArrayList<>();
-
-		if (pesquisaRa != null) {
-			a.setRa(pesquisaRa);
-			try {
-				if (a.getRa().length() == 9) {
-					if (verificaRa(a) == 1) {
-						disciplinas = listarDisciplinas(a);
-						if (disciplinas.isEmpty()) {
-							erro = "Aluno concluiu todas as disciplinas de seu curso";
-						}
-					} else {
-						erro = "RA invalido";
+		try {
+			if (a.getRa().length() == 9) {
+				if (verificaRa(a) == 1) {
+					disciplinas = listarDisciplinas(a);
+					if (disciplinas.isEmpty()) {
+						erro = "Voce concluiu todas as disciplinas de seu curso";
 					}
 				} else {
-					erro = "Tamanho de RA incorreto";
+					erro = "RA inválido";
 				}
-
-			} catch (SQLException | ClassNotFoundException e) {
-				erro = e.getMessage();
-			} finally {
-				model.addAttribute("saida", saida);
-				model.addAttribute("erro", erro);
-				model.addAttribute("disciplinas", disciplinas);
-				model.addAttribute("pesquisaRa", pesquisaRa);
-
+			} else {
+				erro = "Tamanho de RA incorreto";
 			}
-		}
 
+		} catch (SQLException | ClassNotFoundException e) {
+			erro = e.getMessage();
+		} finally {
+			model.addAttribute("saida", saida);
+			model.addAttribute("erro", erro);
+			model.addAttribute("disciplinas", disciplinas);
+			model.addAttribute("pesquisaRa", pesquisaRa);
+
+//			if (cmd.contains("pesquisa Ra")) {
+//				RequestDispatcher rd = request.getRequestDispatcher("menuAluno.jsp");
+//				rd.forward(request, response);
+//			} else {
+//				RequestDispatcher rd = request.getRequestDispatcher("cadastrarMatricula.jsp");
+//				rd.forward(request, response);
+//			}
+
+		}
+		
 		return new ModelAndView("matriculaSecretaria");
 	}
-
+	
 	@RequestMapping(name = "matriculaSecretaria", value = "/matriculaSecretaria", method = RequestMethod.POST)
 	public ModelAndView matriculaSecretariaPost(@RequestParam Map<String, String> param, ModelMap model) {
 		String cmd = param.get("botao");
@@ -74,6 +83,7 @@ public class MatriculaSecretariaController {
 		String erro = "";
 
 		List<Matricula> disciplinas = new ArrayList<>();
+//		List<Matricula> matriculas = new ArrayList<>();
 
 		Aluno a = new Aluno();
 		Matricula m = new Matricula();
@@ -97,8 +107,27 @@ public class MatriculaSecretariaController {
 		}
 		
 		try {
+//			if (cmd.contains("Pesquisa RA")) {
+//				if (a.getRa().length() == 9) {
+//					if (verificaRa(a) == 1) {
+//						matriculas = listarMatriculas(a);
+//						if (matriculas.isEmpty()) {
+//							erro = "O aluno do Ra " + pesquisaRa + " não possui matriculas";
+//						}
+//					} else {
+//						erro = "RA inválido";
+//					}
+//				} else {
+//					erro = "Tamanho de RA incorreto";
+//				}
+//
+//			} else {
+			
 			saida = cadastrarMatricula(m);
 			disciplinas = listarDisciplinas(a);
+			
+			//}
+
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
 
@@ -112,11 +141,31 @@ public class MatriculaSecretariaController {
 			model.addAttribute("saida", saida);
 			model.addAttribute("erro", erro);
 			model.addAttribute("disciplinas", disciplinas);
-		}
+//			model.addAttribute("matriculas", matriculas);
 
+//			if (cmd.contains("Pesquisa Ra")) {
+//				RequestDispatcher rd = request.getRequestDispatcher("vizualizarMatricula.jsp");
+//				rd.forward(request, response);
+//			}
+//			if (cmd.contains("Pesquisa RA")
+//					|| (!cmd.contains(".")) && !cmd.contains("Pesquisa Ra") && !cmd.contains("pesquisa RA") && !cmd.contains("pesquisa Ra")) {
+//				RequestDispatcher rd = request.getRequestDispatcher("cadastrarMatricula.jsp");
+//				rd.forward(request, response);
+//			}
+//			if (cmd.contains("pesquisa RA")) {
+//				RequestDispatcher rd = request.getRequestDispatcher("vizualizarMatriculasAluno.jsp");
+//				rd.forward(request, response);
+//			}
+//			if (cmd.contains(".") || cmd.contains("pesquisa Ra")) {
+//				RequestDispatcher rd = request.getRequestDispatcher("menuAluno.jsp");
+//				rd.forward(request, response);
+//			}
+
+		}
+		
 		return new ModelAndView("matriculaSecretaria");
 	}
-
+	
 	private int verificaRa(Aluno a) throws SQLException, ClassNotFoundException {
 		return mDao.verificaRa(a);
 	}
@@ -125,10 +174,16 @@ public class MatriculaSecretariaController {
 		return mDao.iMatricula(m);
 	}
 
+//	private List<Matricula> listarMatriculas(Aluno a) throws SQLException, ClassNotFoundException {
+//		List<Matricula> matriculas = new ArrayList<>();
+//		matriculas = mDao.listarMatriculas(a);
+//		return matriculas;
+//	}
+
 	private List<Matricula> listarDisciplinas(Aluno a) throws SQLException, ClassNotFoundException {
 		List<Matricula> disciplinas = new ArrayList<>();
 		disciplinas = mDao.listarDisciplinas(a);
 		return disciplinas;
 	}
-
+	
 }

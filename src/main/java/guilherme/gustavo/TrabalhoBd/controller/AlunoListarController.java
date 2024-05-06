@@ -45,7 +45,7 @@ public class AlunoListarController {
 			if (cmd.contains("Listar")) {
 				alunos = listarAlunos();
 				if (alunos.isEmpty()) {
-					erro = "Nao existem alunos cadastrados";
+					erro = "Não existem alunos cadastrados";
 				}
 			}
 
