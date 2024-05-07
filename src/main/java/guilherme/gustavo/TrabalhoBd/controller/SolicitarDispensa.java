@@ -1,8 +1,6 @@
 package guilherme.gustavo.TrabalhoBd.controller;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,40 +24,45 @@ public class SolicitarDispensa {
 	@Autowired
 	private DispensaDao dDao;
 
-	@RequestMapping(name = "solicitarDispensa", value = "/solicitarDispensa", method = RequestMethod.POST)
-	public ModelAndView solicitarDispensaPost(@RequestParam Map<String, String> param, ModelMap model) {
-//		String cpf = param.get("cpf");
-//		String cmd = param.get("botao");
-//
-//		String saida = "";
-//		String erro = "";
-//
-//		List<Disciplina> disciplinas = new ArrayList<>();
-//		Aluno aluno = new Aluno();
-//		
-//		if(cmd != null) {
-//			if(cmd.contains("Buscar")) {
-//				aluno.setCpf(cpf);
-//			}
-//			
-//			try {
-//				if(cmd.contains("Buscar")) {
-//					disciplinas = popularDisciplinas(aluno);
-//				}
-//			} catch (SQLException | ClassNotFoundException e) {
-//				erro = e.getMessage();
-//			} finally {
-//				model.addAttribute("saida", saida);
-//				model.addAttribute("erro", erro);
-//				model.addAttribute("disciplinas", disciplinas);
-//			}
-//		}
+	@RequestMapping(name = "solicitarDispensa", value = "/solicitarDispensa", method = RequestMethod.GET)
+	public ModelAndView solicitarDispensaGet(@RequestParam Map<String, String> param, ModelMap model) {
+
+		String cmd = param.get("botao");
+		String cpf = param.get("cpf");
+
+		String saida = "";
+		String erro = "";
+
+		if (cpf != null) {
+
+			List<Disciplina> disciplinas = new ArrayList<>();
+			Aluno aluno = new Aluno();
+
+			aluno.setCpf(cpf);
+
+			try {
+				if (buscaAluno(aluno) == 0) {
+					disciplinas = popularDisciplinas(aluno);
+				}else {
+					erro = "CPF nao cadastrado";
+				}
+
+			} catch (SQLException | ClassNotFoundException e) {
+				erro = e.getMessage();
+			} finally {
+				model.addAttribute("saida", saida);
+				model.addAttribute("erro", erro);
+				model.addAttribute("disciplinas", disciplinas);
+				model.addAttribute("cpf", cpf);
+			}
+		}
 
 		return new ModelAndView("solicitarDispensa");
 	}
 
-	@RequestMapping(name = "solicitarDispensa", value = "/solicitarDispensa", method = RequestMethod.GET)
-	public ModelAndView solicitarDispensaGet(@RequestParam Map<String, String> param, ModelMap model) {
+	@RequestMapping(name = "solicitarDispensa", value = "/solicitarDispensa", method = RequestMethod.POST)
+	public ModelAndView solicitarDispensaPost(@RequestParam Map<String, String> param, ModelMap model) {
+
 		String cmd = param.get("botao");
 		String cpf = param.get("cpf");
 		String disciplinaInput = param.get("disciplina");
@@ -68,69 +71,61 @@ public class SolicitarDispensa {
 		String saida = "";
 		String erro = "";
 
-		if (cmd != null) {
-			if (cmd.contains("Buscar")) {
-				if (cpf.trim().isEmpty()) {
-					erro = "Por favor, informe o CPF.";
+		if (cmd.contains("Buscar")) {
+			if (cpf.trim().isEmpty()) {
+				erro = "Por favor, informe o CPF.";
+			}
+		} else if (cmd.contains("Solicitar")) {
+			if (cpf.trim().isEmpty() || instituicao.trim().isEmpty()
+					|| disciplinaInput.contains("Selecione a Disciplina")) {
+				erro = "Por favor, preencha todos os campos obrigatorios.";
+			}
+		}
+
+		if (!erro.isEmpty()) {
+			model.addAttribute("erro", erro);
+			return new ModelAndView("solicitarDispensa");
+		}
+
+		List<Disciplina> disciplinas = new ArrayList<>();
+		List<Dispensa> dispensas = new ArrayList<>();
+		Aluno aluno = new Aluno();
+		Disciplina disciplina = new Disciplina();
+		Dispensa dispensa = new Dispensa();
+
+		aluno.setCpf(cpf);
+
+		if (cmd.contains("Solicitar")) {
+			disciplina.setCodigoDisciplina(Integer.parseInt(disciplinaInput));
+
+			dispensa.setDisciplina(disciplina);
+			dispensa.setAluno(aluno);
+			dispensa.setInstituicao(instituicao);
+		}
+
+		try {
+			if (aluno.getCpf().length() == 11) {
+				if (cmd.contains("Solicitar")) {
+					saida = cadastrarDispensa(dispensa);
+					disciplinas = popularDisciplinas(aluno);
 				}
-			} else if (cmd.contains("Solicitar")) {
-				if (cpf.trim().isEmpty() || instituicao.trim().isEmpty()
-						|| disciplinaInput.contains("Selecione a Disciplina")) {
-					erro = "Por favor, preencha todos os campos obrigatorios.";
+				if (cmd.contains("Listar Dispensas")) {
+					dispensas = listarDispensas(cpf);
+					disciplinas = popularDisciplinas(aluno);
+					if (dispensas.isEmpty()) {
+						erro = "Voce ainda nao solicitou nenhuma dispensa";
+					}
 				}
+			} else {
+				erro = "Tamanho de CPF invalido";
 			}
-
-			if (!erro.isEmpty()) {
-				model.addAttribute("erro", erro);
-				return new ModelAndView("solicitarDispensa");
-			}
-
-			List<Disciplina> disciplinas = new ArrayList<>();
-			List<Dispensa> dispensas = new ArrayList<>();
-			Aluno aluno = new Aluno();
-			Disciplina disciplina = new Disciplina();
-			Dispensa dispensa = new Dispensa();
-
-			aluno.setCpf(cpf);
-
-			if (cmd.contains("Solicitar")) {
-				disciplina.setCodigoDisciplina(Integer.parseInt(disciplinaInput));
-
-				dispensa.setDisciplina(disciplina);
-				dispensa.setAluno(aluno);
-				dispensa.setInstituicao(instituicao);
-			}
-
-			try {
-				if (aluno.getCpf().length() == 11) {
-					if (cmd.contains("Buscar")) {
-						if (buscaAluno(aluno) == 0) {
-							disciplinas = popularDisciplinas(aluno);
-						} else {
-							erro = "CPF nao cadastrado";
-						}
-					}
-					if (cmd.contains("Solicitar")) {
-						saida = cadastrarDispensa(dispensa);
-					}
-					if (cmd.contains("Listar Dispensas")) {
-						dispensas = listarDispensas(cpf);
-						if (dispensas.isEmpty()) {
-							erro = "Voce ainda nao solicitou nenhuma dispensa";
-						}
-					}
-				} else {
-					erro = "Tamanho de CPF invalido";
-				}
-			} catch (SQLException | ClassNotFoundException e) {
-				erro = e.getMessage();
-			} finally {
-				model.addAttribute("saida", saida);
-				model.addAttribute("erro", erro);
-				model.addAttribute("disciplinas", disciplinas);
-				model.addAttribute("dispensas", dispensas);
-			}
-
+		} catch (SQLException | ClassNotFoundException e) {
+			erro = e.getMessage();
+		} finally {
+			model.addAttribute("saida", saida);
+			model.addAttribute("erro", erro);
+			model.addAttribute("disciplinas", disciplinas);
+			model.addAttribute("dispensas", dispensas);
 		}
 
 		return new ModelAndView("solicitarDispensa");
