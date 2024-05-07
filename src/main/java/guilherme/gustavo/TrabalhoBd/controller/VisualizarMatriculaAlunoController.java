@@ -37,7 +37,6 @@ public class VisualizarMatriculaAlunoController {
 		String saida = "";
 		String erro = "";
 
-//		List<Matricula> disciplinas = new ArrayList<>();
 		List<Matricula> matriculas = new ArrayList<>();
 
 		Aluno a = new Aluno();
@@ -76,28 +75,18 @@ public class VisualizarMatriculaAlunoController {
 					erro = "Tamanho de RA incorreto";
 				}
 
-			} // else {
-//				saida = cadastrarMatricula(m);
-//				disciplinas = listarDisciplinas(a);
-//			}
+			}
 
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
 
-//			try {
-//				disciplinas = listarDisciplinas(a);
-//			} catch (SQLException | ClassNotFoundException e1) {
-//				erro = e1.getMessage();
-//			}
-
 		} finally {
 			model.addAttribute("saida", saida);
 			model.addAttribute("erro", erro);
-//			model.addAttribute("disciplinas", disciplinas);
 			model.addAttribute("matriculas", matriculas);
 		}
-			return new ModelAndView("visualizarMatriculaAluno");
-		
+		return new ModelAndView("visualizarMatriculaAluno");
+
 	}
 
 	private int verificaRa(Aluno a) throws SQLException, ClassNotFoundException {

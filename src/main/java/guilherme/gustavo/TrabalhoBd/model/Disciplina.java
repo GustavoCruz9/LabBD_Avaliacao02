@@ -16,5 +16,6 @@ public class Disciplina {
 	private LocalTime horasSemanais;
 	private LocalTime horaInicio; 
 	private String diaSemana;
+	private int semestre;
 	
 }

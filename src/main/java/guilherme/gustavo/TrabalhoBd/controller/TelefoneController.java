@@ -24,12 +24,12 @@ public class TelefoneController {
 	@Autowired
 	private TelefoneDao tDao;
 	
-	@RequestMapping(name = "cadastrarTelefone", value = "/cadastrarTelefone", method = RequestMethod.GET)
+	@RequestMapping(name = "telefone", value = "/telefone", method = RequestMethod.GET)
 	public ModelAndView telefoneGet(@RequestParam Map<String, String> param, ModelMap model) {
-		return new ModelAndView("cadastrarTelefone");
+		return new ModelAndView("telefone");
 	}
 	
-	@RequestMapping(name = "cadastrarTelefone", value = "/cadastrarTelefone", method = RequestMethod.POST)
+	@RequestMapping(name = "telefone", value = "/telefone", method = RequestMethod.POST)
 	public ModelAndView telefonePost(@RequestParam Map<String, String> param, ModelMap model) {
 		String cmd = param.get("botao");
 		String cpf = param.get("cpf");
@@ -90,7 +90,7 @@ public class TelefoneController {
 			if (cmd.contains("Listar")) {
 				alunos = listarTelefones();
 				if (alunos.isEmpty()) {
-					erro = "Não existe nenhum telefone cadastrado";
+					erro = "Nao existe nenhum telefone cadastrado";
 				}
 			}
 		} catch (SQLException | ClassNotFoundException e) {
@@ -102,7 +102,7 @@ public class TelefoneController {
 			model.addAttribute("alunos", alunos);
 		}
 
-		return new ModelAndView("cadastrarTelefone");
+		return new ModelAndView("telefone");
 	}
 	
 	private String cadastrarTelefone(Aluno a, Telefone telefoneAntigo) throws SQLException, ClassNotFoundException {

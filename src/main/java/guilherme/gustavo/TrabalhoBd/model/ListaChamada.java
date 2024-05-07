@@ -9,12 +9,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Matricula {
+public class ListaChamada {
 
-	private Disciplina disciplina;
-	private Aluno aluno;
-	private String status;
-	private Double nota;
-	private LocalDate dataMatricula;
+	private int codChamada;
+	private int presenca;
+	private int ausencia;
+	private LocalDate dataChamada;
+	private Matricula matricula;
 	
 }
+

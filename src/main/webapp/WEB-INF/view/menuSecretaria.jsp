@@ -11,7 +11,7 @@
 
 <body>
 
-	 <script src="./resources/js/header.js"></script> 
+	<!-- <script src="./resources/js/header.js"></script> -->
 
 	<main>
 		<div class="titulo">
@@ -38,7 +38,7 @@
 		
 		<br/>
 
-		<form action="menuSecretaria" method="post">
+		<form action="alunoCadastrar" method="post">
 
 			<table>
 				<tr>
