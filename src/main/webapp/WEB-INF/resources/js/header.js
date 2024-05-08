@@ -27,6 +27,9 @@ template.innerHTML = `
                 <li>
                 	<a href="confirmarDispensa" class="funcional">Dispensas</a>
                 </li>
+                <li>
+                	<a href="historico" class="funcional">Historico</a>
+                </li>
             </ul>
         </nav>
     </header>

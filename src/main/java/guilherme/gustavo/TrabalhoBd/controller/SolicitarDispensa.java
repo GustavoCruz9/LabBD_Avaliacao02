@@ -16,19 +16,21 @@ import org.springframework.web.servlet.ModelAndView;
 import guilherme.gustavo.TrabalhoBd.model.Aluno;
 import guilherme.gustavo.TrabalhoBd.model.Disciplina;
 import guilherme.gustavo.TrabalhoBd.model.Dispensa;
-import guilherme.gustavo.TrabalhoBd.persistence.DispensaDao;
+import guilherme.gustavo.TrabalhoBd.persistence.SolicitarDispensaDao;
 
 @Controller
 public class SolicitarDispensa {
 
 	@Autowired
-	private DispensaDao dDao;
+	private SolicitarDispensaDao dDao;
 
 	@RequestMapping(name = "solicitarDispensa", value = "/solicitarDispensa", method = RequestMethod.GET)
 	public ModelAndView solicitarDispensaGet(@RequestParam Map<String, String> param, ModelMap model) {
 
 		String cmd = param.get("botao");
 		String cpf = param.get("cpf");
+		
+		List<Dispensa> dispensas = new ArrayList<>();
 
 		String saida = "";
 		String erro = "";
@@ -41,8 +43,21 @@ public class SolicitarDispensa {
 			aluno.setCpf(cpf);
 
 			try {
-				if (buscaAluno(aluno) == 0) {
-					disciplinas = popularDisciplinas(aluno);
+				if(buscaAluno(aluno) == 0) {
+					
+					if (cmd.contains("Buscar")) {
+						disciplinas = popularDisciplinas(aluno);
+					}
+					
+					if (cmd.contains("Listar Dispensas")) {
+						
+						dispensas = listarDispensas(cpf);
+						disciplinas = popularDisciplinas(aluno);
+						
+						if (dispensas.isEmpty()) {
+							erro = "Voce ainda nao solicitou nenhuma dispensa";
+						}
+					}	
 				}else {
 					erro = "CPF nao cadastrado";
 				}
@@ -53,6 +68,7 @@ public class SolicitarDispensa {
 				model.addAttribute("saida", saida);
 				model.addAttribute("erro", erro);
 				model.addAttribute("disciplinas", disciplinas);
+				model.addAttribute("dispensas", dispensas);
 				model.addAttribute("cpf", cpf);
 			}
 		}
@@ -109,13 +125,13 @@ public class SolicitarDispensa {
 					saida = cadastrarDispensa(dispensa);
 					disciplinas = popularDisciplinas(aluno);
 				}
-				if (cmd.contains("Listar Dispensas")) {
-					dispensas = listarDispensas(cpf);
-					disciplinas = popularDisciplinas(aluno);
-					if (dispensas.isEmpty()) {
-						erro = "Voce ainda nao solicitou nenhuma dispensa";
-					}
-				}
+//				if (cmd.contains("Listar Dispensas")) {
+//					dispensas = listarDispensas(cpf);
+//					disciplinas = popularDisciplinas(aluno);
+//					if (dispensas.isEmpty()) {
+//						erro = "Voce ainda nao solicitou nenhuma dispensa";
+//					}
+//				}
 			} else {
 				erro = "Tamanho de CPF invalido";
 			}

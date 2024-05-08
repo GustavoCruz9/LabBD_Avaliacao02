@@ -43,9 +43,13 @@
 			<table>
 				<tr>
 					<td colspan="3"><input type="text" id="cpf" name="cpf"
-						placeholder="CPF" value="${param.cpf}"></td>
+						placeholder="CPF" pattern="[0-9]*" value="${param.cpf}"></td>
 					<td colspan="1"><input type="submit" id="botao" name="botao"
 						value="Buscar"></td>
+				</tr>
+				<tr>
+					<td colspan="4" class="center"><input type="submit" id="botao"
+						name="botao" value="Listar Dispensas"></td>
 				</tr>
 			</table>
 		</form>
@@ -76,10 +80,6 @@
 				<tr>
 					<td colspan="4" class="center"><input type="submit" id="botao"
 						name="botao" value="Solicitar"></td>
-				</tr>
-				<tr>
-					<td colspan="4" class="center"><input type="submit" id="botao"
-						name="botao" value="Listar Dispensas"></td>
 				</tr>
 			</table>
 

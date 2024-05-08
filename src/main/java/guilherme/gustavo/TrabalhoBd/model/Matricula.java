@@ -16,5 +16,6 @@ public class Matricula {
 	private String status;
 	private Double nota;
 	private LocalDate dataMatricula;
+	private int qtdFaltas;
 	
 }
