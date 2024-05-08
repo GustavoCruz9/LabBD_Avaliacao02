@@ -21,7 +21,7 @@
 
 		<a href="alunoCadastrar" class="funcional">Secretaria Academica</a>
 		<a href="matriculaAluno" class="funcional">Aluno</a>
-		<a href="" class="botao">Professor</a>
+		<a href="chamada" class="funcional">Professor</a>
 
 	</div>
 	

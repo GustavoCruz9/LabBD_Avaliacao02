@@ -39,7 +39,7 @@
 			</c:if>
 		</div>
 
-		<form action="solicitarDispensa" method="get" class="formDispensa">
+		<form action="solicitarDispensa" method="get" class="formDispensa1">
 			<table>
 				<tr>
 					<td colspan="3"><input type="text" id="cpf" name="cpf"
