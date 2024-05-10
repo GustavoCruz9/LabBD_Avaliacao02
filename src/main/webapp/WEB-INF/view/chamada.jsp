@@ -60,7 +60,8 @@
 			<div class="conteudoChamada">
 
 				<h2><c:out value="${ListaChamada[0].matricula.disciplina.disciplina}" /></h2>
-
+				
+				<c:if test="${not empty ListaChamada}">
 				<table>
 					<thead>
 						<tr>
@@ -80,6 +81,7 @@
 						</c:forEach>
 					</tbody>
 				</table>
+				</c:if>
 			</div>
 		</form>
 

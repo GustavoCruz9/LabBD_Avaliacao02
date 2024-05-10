@@ -35,44 +35,59 @@ public class ChamadaController {
 		String cmd = param.get("botao");
 		String codigoProfessor = param.get("codigoProfessor");
 		String codDisciplina = param.get("codDisciplina");
-		String codChamada = param.get("codChamada");
 
 		String saida = "";
 		String erro = "";
 		List<Disciplina> disciplinas = new ArrayList<>();
 		List<ListaChamada> ListaChamada = new ArrayList<>();
-
+		Professor p = new Professor();
+		Disciplina d = new Disciplina();
+		
 		if (cmd.contains("Buscar Disciplinas")) {
 			if (codigoProfessor.trim().isEmpty()) {
 				erro = "Por favor, informe o codigo do Professor";
 			}
 		}
-
-		if (cmd.contains("Buscar Chamadas")) {
-			try {
-				Integer.parseInt(codDisciplina);
-			}catch (Exception e) {
-				erro = "selecione uma disciplina";
-				model.addAttribute("erro", erro);
-				model.addAttribute("codigoProfessor", codigoProfessor);
-				return new ModelAndView("chamada");
+		
+		if (cmd.contains("Nova Chamada")){
+			if(codigoProfessor.trim().isEmpty() || codDisciplina == null) {
+				erro = "Preencha os campos de codigo professor e a disciplina desejada";
 			}
 		}
-
+		
 		if (!erro.isEmpty()) {
 			model.addAttribute("erro", erro);
 			return new ModelAndView("chamada");
 		}
-
-		Professor p = new Professor();
-		Disciplina d = new Disciplina();
-
-		if (cmd.contains("Buscar Disciplinas")) {
+		
+		if (cmd.contains("Buscar Disciplinas") || cmd.contains("Nova Chamada") 
+				|| cmd.contains("Buscar Chamadas")  ) {
 			p.setCodProfessor(Integer.parseInt(codigoProfessor));
 		}
 
+
 		if (cmd.contains("Buscar Chamadas")) {
-			d.setCodigoDisciplina(Integer.parseInt(codDisciplina));
+            try {
+                Integer.parseInt(codDisciplina);
+            }catch (Exception e) {
+            	try {
+					if (ValidaProfessor(p) == 1) {
+						disciplinas = buscaDisciplina(p);
+					}
+				} catch (SQLException | ClassNotFoundException e1) {
+					erro = e1.getMessage();	
+				} finally {
+					model.addAttribute("erro", erro);
+	                model.addAttribute("codigoProfessor", codigoProfessor);
+	    			model.addAttribute("disciplinas", disciplinas);
+	                return new ModelAndView("chamada");
+				}     
+            }
+        }
+
+
+		if (cmd.contains("Buscar Chamadas")) {
+				d.setCodigoDisciplina(Integer.parseInt(codDisciplina));
 		}
 
 		if (cmd.contains("Nova Chamada")) {
@@ -102,6 +117,9 @@ public class ChamadaController {
 				if(ListaChamada.isEmpty()) {
 					erro = "Nao existe chamadas para esta disciplina";
 				}
+				if (ValidaProfessor(p) == 1) {
+					disciplinas = buscaDisciplina(p);
+				}
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
@@ -111,7 +129,6 @@ public class ChamadaController {
 			model.addAttribute("professor", p);
 			model.addAttribute("disciplinas", disciplinas);
 			model.addAttribute("ListaChamada", ListaChamada);
-//			model.addAttribute("codigoProfessor", codigoProfessor);
 		}
 
 		return new ModelAndView("chamada");

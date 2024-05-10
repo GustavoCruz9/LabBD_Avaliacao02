@@ -17,5 +17,6 @@ public class Matricula {
 	private Double nota;
 	private LocalDate dataMatricula;
 	private int qtdFaltas;
+	private int anoSemestre;
 	
 }

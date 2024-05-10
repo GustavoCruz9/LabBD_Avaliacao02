@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import guilherme.gustavo.TrabalhoBd.model.Aluno;
 import guilherme.gustavo.TrabalhoBd.model.Disciplina;
 import guilherme.gustavo.TrabalhoBd.model.ListaChamada;
 import guilherme.gustavo.TrabalhoBd.model.Matricula;
@@ -76,14 +77,14 @@ public class ChamadaDao implements IChamadaDao {
 		List<ListaChamada> ListaChamada = new ArrayList<>();
 		Connection c = gDao.getConnection();
 		String sql = """
-				select distinct (l.dataChamada), min(l.codChamada) as codChamada, d.nome
+				select distinct (l.dataChamada), d.nome, l.anoSemestre, l.cpf, l.codDisciplina
 				from ListaChamada l , Matricula m, Disciplina d
 				where l.anoSemestre = m.anoSemestre
-				      and l.codDisciplina = m.codDisciplina
-				      and d.codDisciplina = m.codDisciplina
-		              and l.codDisciplina = ? 
-			          and l.anoSemestre = (dbo.fn_obterAnoSemestre()) 
-				group by l.dataChamada, l.codChamada, d.nome
+					  and l.codDisciplina = m.codDisciplina
+					  and d.codDisciplina = m.codDisciplina
+				      and l.codDisciplina = ? 
+					  and l.anoSemestre = (dbo.fn_obterAnoSemestre()) 
+				group by l.dataChamada, d.nome, l.anoSemestre, l.cpf, l.codDisciplina
 				""";
 		
 		PreparedStatement ps = c.prepareStatement(sql);
@@ -92,15 +93,21 @@ public class ChamadaDao implements IChamadaDao {
 		
 		while(rs.next()) {
 			
+			Aluno a = new Aluno();
 			ListaChamada lc = new ListaChamada();
 			Matricula m = new Matricula();
 			d = new Disciplina();
 			
+			a.setCpf(rs.getString("cpf"));
+			m.setAluno(a);
+			
+			m.setAnoSemestre(rs.getInt("anoSemestre"));
+			d.setCodigoDisciplina(rs.getInt("codDisciplina"));
 			d.setDisciplina(rs.getString("nome"));
 			m.setDisciplina(d);
+			
 			lc.setMatricula(m);
 			
-			lc.setCodChamada(rs.getInt("codChamada"));
 			lc.setDataChamada(rs.getDate("dataChamada").toLocalDate());
 			
 			ListaChamada.add(lc);
