@@ -49,7 +49,7 @@
 				</div>
 
 			</form>
-			<c:if test="${not empty matricula}">
+			<c:if test="${matricula.aluno.ra ne null}">
 			<h3>Informacoes sobre o(a) Aluno(a)</h3>
 			<table class="tabela-centrada">
 				<thead>

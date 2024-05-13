@@ -11,11 +11,14 @@ import lombok.ToString;
 @ToString
 public class ListaChamada {
 
-	private int codChamada;
+	private LocalDate dataChamada;
 	private int presenca;
 	private int ausencia;
-	private LocalDate dataChamada;
 	private Matricula matricula;
+	private String aula1;
+	private String aula2;
+	private String aula3;
+	private String aula4;
 	
 }
 

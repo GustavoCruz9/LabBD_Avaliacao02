@@ -101,7 +101,7 @@ public class HistoricoDao implements IHistoricoDao {
 			d.setProfessor(p);
 			
 			m.setDisciplina(d);
-			m.setNota(rs.getDouble("notaFinal"));
+			m.setNota(rs.getString("notaFinal"));
 			m.setQtdFaltas(rs.getInt("qtdFaltas"));
 			
 			matriculas.add(m);

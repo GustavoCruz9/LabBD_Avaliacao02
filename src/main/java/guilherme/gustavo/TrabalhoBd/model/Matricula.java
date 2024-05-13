@@ -14,7 +14,7 @@ public class Matricula {
 	private Disciplina disciplina;
 	private Aluno aluno;
 	private String status;
-	private Double nota;
+	private String nota;
 	private LocalDate dataMatricula;
 	private int qtdFaltas;
 	private int anoSemestre;

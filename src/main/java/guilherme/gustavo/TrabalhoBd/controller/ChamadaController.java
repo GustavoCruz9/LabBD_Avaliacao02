@@ -1,6 +1,8 @@
 package guilherme.gustavo.TrabalhoBd.controller;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,8 @@ public class ChamadaController {
 		String cmd = param.get("botao");
 		String codigoProfessor = param.get("codigoProfessor");
 		String codDisciplina = param.get("codDisciplina");
+		String dataChamada = param.get("dataChamda");
+		
 
 		String saida = "";
 		String erro = "";
@@ -85,7 +89,6 @@ public class ChamadaController {
             }
         }
 
-
 		if (cmd.contains("Buscar Chamadas")) {
 				d.setCodigoDisciplina(Integer.parseInt(codDisciplina));
 		}
@@ -103,6 +106,12 @@ public class ChamadaController {
 				erro = e.getMessage();
 			}
 
+		}
+		
+		if (cmd.contains("Alterar")) {
+			model.addAttribute("dataChamada", dataChamada);
+			model.addAttribute("codDisciplina", codDisciplina);
+			return new ModelAndView("editarChamada");
 		}
 
 		try {
@@ -129,6 +138,7 @@ public class ChamadaController {
 			model.addAttribute("professor", p);
 			model.addAttribute("disciplinas", disciplinas);
 			model.addAttribute("ListaChamada", ListaChamada);
+//			ListaChamada.get(0).getMatricula().getDisciplina().getCodigoDisciplina();
 		}
 
 		return new ModelAndView("chamada");

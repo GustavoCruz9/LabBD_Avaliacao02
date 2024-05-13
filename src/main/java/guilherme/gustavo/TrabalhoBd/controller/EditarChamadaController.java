@@ -20,23 +20,21 @@ import guilherme.gustavo.TrabalhoBd.model.Aluno;
 import guilherme.gustavo.TrabalhoBd.model.Disciplina;
 import guilherme.gustavo.TrabalhoBd.model.ListaChamada;
 import guilherme.gustavo.TrabalhoBd.model.Matricula;
-import guilherme.gustavo.TrabalhoBd.persistence.CadastrarChamadaDao;
+import guilherme.gustavo.TrabalhoBd.persistence.EditarChamadaDao;
 
 @Controller
-public class CadastrarChamadaController {
-
+public class EditarChamadaController {
+	
 	@Autowired
-	CadastrarChamadaDao ccDao;
+	EditarChamadaDao eCDao;
 
-	@RequestMapping(name = "cadastrarChamada", value = "/cadastrarChamada", method = RequestMethod.GET)
-	public ModelAndView cadastrarChamadaGet(@RequestParam Map<String, String> param, ModelMap model) {
-		return new ModelAndView("cadastrarChamada");
+	@RequestMapping(name = "editarChamada", value = "/editarChamada", method = RequestMethod.GET)
+	public ModelAndView editarChamadaGet(@RequestParam Map<String, String> param, ModelMap model) {
+		return new ModelAndView("editarChamada");
 	}
-
-	@RequestMapping(name = "cadastrarChamada", value = "/cadastrarChamada", method = RequestMethod.POST)
-	public ModelAndView cadastrarChamadaPost(@RequestParam Map<String, String> param,
-			ModelMap model) {
-
+	
+	@RequestMapping(name = "editarChamada", value = "/editarChamada", method = RequestMethod.POST)
+	public ModelAndView editarChamadaPost(@RequestParam Map<String, String> param, ModelMap model) {
 		String codDisciplina = param.get("codDisciplina");
 		String cmd = param.get("botao");
 		String dataChamada = param.get("dataChamada");
@@ -51,43 +49,43 @@ public class CadastrarChamadaController {
 		Disciplina d = new Disciplina();
 
 		d.setCodigoDisciplina(Integer.parseInt(codDisciplina));
-
+		
 		if (!erro.isEmpty()) {
 			model.addAttribute("erro", erro);
-			return new ModelAndView("cadastrarChamada");
+			return new ModelAndView("editarChamada");
 		}
-
+		
 		try {
 			if (cmd.contains("Listar Alunos")) {
 				if (!dataChamada.trim().isEmpty()) {
-					matriculas = buscarAlunos(d);
-					if (matriculas.isEmpty()) {
+					listaChamada = buscarAlunos(d, dataChamada);
+					if (listaChamada.isEmpty()) {
 						erro = "Nao existem alunos matriculados nessa materia";
 					}
 
-					horasSemanais = matriculas.get(0).getDisciplina().getHorasSemanais().toString();
+					horasSemanais = listaChamada.get(0).getMatricula().getDisciplina().getHorasSemanais().toString();
 
 					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 					LocalDate dataChamadaLocalDate = LocalDate.parse(dataChamada, formatter);
 					DayOfWeek diaDaSemana = dataChamadaLocalDate.getDayOfWeek();
-
-					if (!traduzDiaSemana(diaDaSemana).equals(matriculas.get(0).getDisciplina().getDiaSemana())) {
+					
+					if (!traduzDiaSemana(diaDaSemana).equals(listaChamada.get(0).getMatricula().getDisciplina().getDiaSemana())) {
 						erro = "A data escolhida deve ser no dia da semana equivalente ao da disciplina";
-						matriculas = new ArrayList<>();
+						listaChamada = new ArrayList<>();
 					}
 				} else {
 					erro = "Insira a data da Chamada";
 				}
 			}
 			
-			if (cmd.contains("Cadastrar Chamada")) {
-				List<Matricula> matriculasAux = new ArrayList<>();
-				matriculasAux = buscarAlunos(d);
-				while(!matriculasAux.isEmpty()) {
+			if (cmd.contains("Editar Chamada")) {
+				List<ListaChamada> listaChamadaAux = new ArrayList<>();
+				listaChamadaAux = buscarAlunos(d, dataChamada);
+				while(!listaChamadaAux.isEmpty()) {
 					int presencas = 0;
 					int ausencias = 0;
-					String raAluno = matriculasAux.get(0).getAluno().getRa();
+					String raAluno = listaChamadaAux.get(0).getMatricula().getAluno().getRa();
 					String checkboxAula1 = param.get("checkboxAula1_"+raAluno);
 					String checkboxAula2 = param.get("checkboxAula2_"+raAluno);
 					String checkboxAula3 = param.get("checkboxAula3_"+raAluno);
@@ -126,11 +124,14 @@ public class CadastrarChamadaController {
 
 					LocalDate dataChamadaLocalDate = LocalDate.parse(dataChamada, formatter);
 					
-					aluno.setCpf(matriculasAux.get(0).getAluno().getCpf());
-					
+					aluno.setCpf(listaChamadaAux.get(0).getMatricula().getAluno().getCpf());
+					aluno.setRa(listaChamadaAux.get(0).getMatricula().getAluno().getRa());
+					aluno.setNome(listaChamadaAux.get(0).getMatricula().getAluno().getNome());
 					matricula.setAluno(aluno);
+					horasSemanais = listaChamadaAux.get(0).getMatricula().getDisciplina().getHorasSemanais().toString();
 					matricula.setDisciplina(d);
-					matricula.setAnoSemestre(matriculasAux.get(0).getAnoSemestre());
+					matricula.setAnoSemestre(listaChamadaAux.get(0).getMatricula().getAnoSemestre());
+					
 					
 					lc.setMatricula(matricula);
 					lc.setAula1(checkboxAula1);
@@ -143,36 +144,26 @@ public class CadastrarChamadaController {
 					
 					listaChamada.add(lc);
 					
-					matriculasAux.remove(0);
-					cadastraChamada(lc);
+					listaChamadaAux.remove(0);
+					editarChamada(lc);
 				}
 				
-				saida = "Chamada cadastrada com sucesso";
+				saida = "Chamada atualizada com sucesso";
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();
 		} finally {
 			model.addAttribute("saida", saida);
 			model.addAttribute("erro", erro);
-			model.addAttribute("matriculas", matriculas);
+			model.addAttribute("listaChamada", listaChamada);
 			model.addAttribute("horasSemanais", horasSemanais);
 			model.addAttribute("dataChamada", dataChamada);
 		}
-
-		return new ModelAndView("cadastrarChamada");
+		
+		return new ModelAndView("editarChamada");
 	}
 
-	private void cadastraChamada(ListaChamada listaChamada) throws SQLException, ClassNotFoundException {
-		ccDao.cadastrarChamada(listaChamada); 
-	}
-
-	private List<Matricula> buscarAlunos(Disciplina d) throws SQLException, ClassNotFoundException {
-		List<Matricula> matriculas = new ArrayList<>();
-		matriculas = ccDao.buscarAlunos(d);
-		return matriculas;
-	}
-
-	private String traduzDiaSemana(DayOfWeek diaDaSemana) {
+	private Object traduzDiaSemana(DayOfWeek diaDaSemana) {
 		switch (diaDaSemana) {
 		case MONDAY:
 			return "Segunda-feira";
@@ -193,4 +184,13 @@ public class CadastrarChamadaController {
 		}
 	}
 
+	private List<ListaChamada> buscarAlunos(Disciplina d, String dataChamada) throws SQLException, ClassNotFoundException{
+		return eCDao.buscarAlunos(d, dataChamada);
+	}
+
+	private void editarChamada(ListaChamada lc) throws SQLException, ClassNotFoundException{
+		eCDao.atualiazarChamada(lc);
+		
+	}
+	
 }

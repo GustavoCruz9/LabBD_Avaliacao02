@@ -66,6 +66,7 @@ public class HistoricoController {
 				}
 			} else {
 				erro = "Tamanho de Ra invalido";
+				matricula = new Matricula();
 			}
 		} catch (SQLException | ClassNotFoundException e) {
 			erro = e.getMessage();

@@ -39,7 +39,8 @@
 
 				<input type="submit" value="Nova Chamada" id="botao" name="botao">
 			</div>
-
+		</form>
+		
 			<div align="center">
 				<c:if test="${not empty erro }">
 					<h2>
@@ -71,19 +72,24 @@
 					<tbody>
 						<c:forEach var="l" items="${ListaChamada}">
 							<tr>
-								<td name="codChamada" id="codChamada" value="${l.codChamada}"><c:out
+								<td name="dataChamada" id="dataChamada" value="${l.dataChamada}"><c:out
 										value="${l.dataChamada}" /></td>
-								<td><input type="submit" value="Visualizar" id="botao"
-									name="botao"></td>
-								<td><input type="submit" value="Alterar" id="botao"
-									name="botao"></td>
+								<!--<td><input type="submit" value="Visualizar" id="botao"
+									name="botao"></td>-->
+								<td>
+									<form method="post" action="chamada" >
+										<input type="submit" value="Alterar / Vizualizar" id="botao"
+										name="botao">
+										<input type="hidden" name="codDisciplina" value="${l.matricula.disciplina.codigoDisciplina}">
+										<input type="hidden" name="dataChamada" value="${l.dataChamada}">
+									</form>
+								</td>
 							</tr>
 						</c:forEach>
 					</tbody>
 				</table>
 				</c:if>
 			</div>
-		</form>
 
 	</main>
 

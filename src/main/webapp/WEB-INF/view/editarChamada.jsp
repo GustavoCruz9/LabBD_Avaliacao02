@@ -30,22 +30,23 @@
 				</h3>
 			</c:if>
 		</div>
-
-		<form method="post" action="cadastrarChamada"
+		
+		<form method="post" action="editarChamada"
 			class="formCadastrarChamada">
 
 			<input type="hidden" name="codDisciplina"
 				value="${param.codDisciplina}">
 
 			<div class="dataContainer">
-				<label>Data da Chamada:</label> <input type="date" id="dataChamada"
-					name="dataChamada" value="${param.dataChamada}"> <input type="submit" id="botao"
-					name="botao" value="Listar Alunos">
+				<label>Data da Chamada:</label> 
+				<input type="date" id="dataChamada"
+					name="dataChamada" value="${param.dataChamada}" readonly> 
+				<input type="submit" id="botao" name="botao" value="Listar Alunos">
 			</div>
 			
-			<c:if test="${not empty matriculas}">	
+			<c:if test="${not empty listaChamada}">	
 				<h1>
-					<c:out value="${matriculas[0].disciplina.disciplina}" />
+					<c:out value="${listaChamada[0].matricula.disciplina.disciplina}" />
 				</h1>
 	
 				<table>
@@ -74,25 +75,37 @@
 						</c:otherwise>
 					</c:choose>
 					<tbody>
-						<c:forEach var="m" items="${matriculas}">
+						<c:forEach var="lc" items="${listaChamada}">
 							<tr>
-								<td>${m.aluno.ra}</td>
-								<td>${m.aluno.nome}</td>
+								<td>${lc.matricula.aluno.ra}</td>
+								<td>${lc.matricula.aluno.nome}</td>
 								<c:choose>
 									<c:when test="${horasSemanais eq '01:40'}">
-										<td><input type="checkbox" id="checkboxAula1_${m.aluno.ra}" name="checkboxAula1_${m.aluno.ra}" checked value="1">
+										<td><input type="checkbox" id="checkboxAula1_${lc.matricula.aluno.ra}" 
+										name="checkboxAula1_${lc.matricula.aluno.ra}" value="1" 
+										<c:if test="${lc.aula1 == '1'}">checked</c:if>>
 										</td>
-										<td><input type="checkbox" id="checkboxAula2_${m.aluno.ra}" name="checkboxAula2_${m.aluno.ra}" checked value="1">
+										<td><input type="checkbox" id="checkboxAula2_${lc.matricula.aluno.ra}" 
+										name="checkboxAula2_${lc.matricula.aluno.ra}" value="1"
+										<c:if test="${lc.aula2 == '1'}">checked</c:if>>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td><input type="checkbox" id="checkboxAula1_${m.aluno.ra}" name="checkboxAula1_${m.aluno.ra}" checked value="1">
+										<td><input type="checkbox" id="checkboxAula1_${lc.matricula.aluno.ra}" 
+										name="checkboxAula1_${lc.matricula.aluno.ra}" value="1"
+										<c:if test="${lc.aula1 == '1'}">checked</c:if>>
 										</td>
-										<td><input type="checkbox" id="checkboxAula2_${m.aluno.ra}" name="checkboxAula2_${m.aluno.ra}" checked value="1">
+										<td><input type="checkbox" id="checkboxAula2_${lc.matricula.aluno.ra}" 
+										name="checkboxAula2_${lc.matricula.aluno.ra}" value="1"
+										<c:if test="${lc.aula2 == '1'}">checked</c:if>>
 										</td>
-										<td><input type="checkbox" id="checkboxAula3_${m.aluno.ra}" name="checkboxAula3_${m.aluno.ra}" checked value="1">
+										<td><input type="checkbox" id="checkboxAula3_${lc.matricula.aluno.ra}" 
+										name="checkboxAula3_${lc.matricula.aluno.ra}" value="1"
+										<c:if test="${lc.aula3 == '1'}">checked</c:if>>
 										</td>
-										<td><input type="checkbox" id="checkboxAula4_${m.aluno.ra}" name="checkboxAula4_${m.aluno.ra}" checked value="1">
+										<td><input type="checkbox" id="checkboxAula4_${lc.matricula.aluno.ra}" 
+										name="checkboxAula4_${lc.matricula.aluno.ra}" value="1"
+										<c:if test="${lc.aula4 == '1'}">checked</c:if>>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -102,7 +115,7 @@
 				</table>
 	
 				<input type="submit" id="botao" name="botao"
-					value="Cadastrar Chamada" class="btnCadastrarChamada">
+					value="Editar Chamada" class="btnCadastrarChamada">
 			</c:if>
 		</form>
 

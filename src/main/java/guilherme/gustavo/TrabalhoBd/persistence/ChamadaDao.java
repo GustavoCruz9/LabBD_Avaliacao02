@@ -76,16 +76,22 @@ public class ChamadaDao implements IChamadaDao {
 
 		List<ListaChamada> ListaChamada = new ArrayList<>();
 		Connection c = gDao.getConnection();
+//		String sql = """
+//				select distinct (l.dataChamada), d.nome, l.anoSemestre, l.cpf, l.codDisciplina
+//				from ListaChamada l , Matricula m, Disciplina d
+//				where l.anoSemestre = m.anoSemestre
+//					  and l.codDisciplina = m.codDisciplina
+//					  and d.codDisciplina = m.codDisciplina
+//				      and l.codDisciplina = ? 
+//					  and l.anoSemestre = (dbo.fn_obterAnoSemestre()) 
+//				group by l.dataChamada, d.nome, l.anoSemestre, l.cpf, l.codDisciplina
+//				""";
+		
 		String sql = """
-				select distinct (l.dataChamada), d.nome, l.anoSemestre, l.cpf, l.codDisciplina
-				from ListaChamada l , Matricula m, Disciplina d
-				where l.anoSemestre = m.anoSemestre
-					  and l.codDisciplina = m.codDisciplina
-					  and d.codDisciplina = m.codDisciplina
-				      and l.codDisciplina = ? 
-					  and l.anoSemestre = (dbo.fn_obterAnoSemestre()) 
-				group by l.dataChamada, d.nome, l.anoSemestre, l.cpf, l.codDisciplina
+				select dataChamada, nome, anoSemestre, cpf, codDisciplina
+				from fn_obterChamadasUnicas(?)
 				""";
+				
 		
 		PreparedStatement ps = c.prepareStatement(sql);
 		ps.setInt(1, d.getCodigoDisciplina());

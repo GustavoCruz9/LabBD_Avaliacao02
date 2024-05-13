@@ -98,7 +98,7 @@ public class MatriculaDao implements IMatricula<Matricula> {
 	@Override
 	public String iMatricula(Matricula m) throws SQLException, ClassNotFoundException {
 		Connection c = gDao.getConnection();
-		String sql = "{CALL sp_cadastrarMatricula ( ?, ?, ? )}";
+		String sql = "{CALL sp_cadastrarMatricula (?, ?, ?)}";
 		CallableStatement cs = c.prepareCall(sql);
 
 		cs.setString(1, m.getAluno().getRa());
